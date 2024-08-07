@@ -1,14 +1,12 @@
-const { v4: uuidv4 } = require('uuid');
 const AWS = require('aws-sdk');
 
 AWS.config.update({ region: process.env.region });
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
-const tableName = 'Events';
 
 exports.handler = async (event) => {
   const { principalId, content } = event;
 
-  const id = uuidv4();
+  const id = crypto.randomUUID();
   const createdAt = new Date().toISOString();
 
   const eventItem = {

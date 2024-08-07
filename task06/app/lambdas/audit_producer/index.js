@@ -1,6 +1,5 @@
 const { DynamoDBClient, PutItemCommand } = require('@aws-sdk/client-dynamodb');
 const { marshall, unmarshall } = require('@aws-sdk/util-dynamodb');
-const { v4: uuidv4 } = require('uuid');
 
 const client = new DynamoDBClient({ region: process.env.region });
 const auditTableName = process.env.target_table;
@@ -19,7 +18,7 @@ exports.handler = async (event) => {
       };
 
       const auditItem = {
-        id: uuidv4(),
+        id: crypto.randomUUID(),
         itemKey: configurationItem.key,
         modificationTime: new Date().toISOString(),
         newValue: configurationItem,
@@ -42,7 +41,7 @@ exports.handler = async (event) => {
 
       if (oldValue !== newValue) {
         const auditItem = {
-          id: uuidv4(),
+          id: crypto.randomUUID(),
           itemKey: newImage.key,
           modificationTime: new Date().toISOString(),
           updatedAttribute: 'value',
